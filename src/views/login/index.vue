@@ -1,14 +1,15 @@
 <template>
   <div class="loginForm">
+    <!-- 导航栏 -->
     <van-nav-bar title="欢迎登录" />
 
     <van-notice-bar :text="gonggao" left-icon="volume-o" />
 
     <!-- 验证 -->
-    <ValidationObserver tag="form" ref="loginForm">
+    <ValidationObserver ref="loginForm">
       <!-- 登录表单 -->
       <van-cell-group>
-        <ValidationProvider class="phone" tag="div" name="手机号" rules="required" v-slot="{ errors }">
+        <ValidationProvider class="phone" tag="div" name="手机号" rules="required|phone" v-slot="{ errors }">
           <van-icon name="phone-o" />
           <van-field
             v-model="user.mobile"
@@ -19,7 +20,7 @@
           />
         </ValidationProvider>
 
-        <ValidationProvider class="code" tag="div" name="验证码" rules="required" v-slot="{ errors }">
+        <ValidationProvider class="code" tag="div" name="验证码" rules="required|max:6|min:6" v-slot="{ errors }">
           <van-icon name="orders-o" />
           <van-field
             v-model="user.code"
@@ -28,27 +29,27 @@
             placeholder="请输入验证码"
             :error-message="errors[0]"
           />
-          <van-button class="sendCode" :disabled="disabledState" size="small" type="default" @click="countDown ">{{ sendCode }}</van-button>
+          <van-button
+            class="sendCode"
+            :disabled="disabledState"
+            size="small"
+            type="default"
+            @click="countDown "
+          >{{ sendCode }}</van-button>
         </ValidationProvider>
       </van-cell-group>
       <!-- /登录表单 -->
     </ValidationObserver>
 
     <div class="btn-wrap">
-      <van-button
-        class="loginButton"
-        loading-text="加载中..."
-        :loading="isLoginLoading"
-        :disabled="disabledState"
-        type="info"
-        @click="goLogin"
-      >登录</van-button>
+      <van-button class="loginButton" type="info" @click="goLogin">登录</van-button>
     </div>
   </div>
 </template>
 
 <script>
 import { login } from '@/api/user'
+import { setItem } from '@/utils/storage.js'
 export default {
   name: 'login',
   data () {
@@ -68,19 +69,31 @@ export default {
   },
   methods: {
     async goLogin () {
+      let isValid = await this.$refs.loginForm.validate()
+      if (!isValid) {
+        return
+      }
+      // 加载
+      const toast = this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true, // 禁用背景点击
+        loadingType: 'spinner',
+        message: '登录中...'
+      })
       try {
-        let isValid = await this.$refs.loginForm.validate()
-        if (!isValid) {
-          return
-        }
-        this.isLoginLoading = true
-        this.disabledState = true
-        await login(this.user)
-        this.$toast.success('登录成功')
-        this.isLoginLoading = false
-        this.disabledState = false
-        this.$router.push('/user')
+        const { data } = await login(this.user)
+        toast.clear()
+        this.$toast.success({
+          duration: 2000,
+          message: '登录成功'
+        })
+        // 登录成功之后将token存起来
+        this.$store.commit('setUser', data.data)
+        // 防止页面刷新token消失，将token存到本地
+        setItem('user', data.data)
+        this.$router.push('/tabbar')
       } catch (err) {
+        toast.clear()
         if (err.response && err.response.status === 400) {
           this.$toast.fail('手机号或者密码错误')
           this.isLoginLoading = false
@@ -116,20 +129,21 @@ export default {
       color: #fff;
     }
   }
-  .phone,.code {
+  .phone,
+  .code {
     margin-left: 10px;
     display: flex;
     .van-icon {
       font-size: 18px;
       margin-top: 13px;
     }
-    .van-cell{
+    .van-cell {
       width: 70%;
     }
-    .sendCode{
+    .sendCode {
       margin-top: 5px;
       border-radius: 20px;
-      background-color: rgb(237, 237, 237)
+      background-color: rgb(237, 237, 237);
     }
   }
 }
