@@ -24,6 +24,6 @@ request.interceptors.request.use(function (config) {
   return Promise.reject(err)
 })
 
-// 相应处理
+// 响应处理
 
 export default request

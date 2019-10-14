@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import '@/utils/date'
 import './styles/index.less'
 
 import {
@@ -24,7 +25,16 @@ import {
   Popup,
   Loading,
   Icon,
-  Tabbar, TabbarItem
+  Tabbar,
+  TabbarItem,
+  Tab,
+  Tabs,
+  List,
+  PullRefresh,
+  Image,
+  Grid,
+  GridItem,
+  Lazyload
 } from 'vant'
 Vue
   .use(Button)
@@ -39,6 +49,14 @@ Vue
   .use(Icon)
   .use(Tabbar)
   .use(TabbarItem)
+  .use(Tab)
+  .use(Tabs)
+  .use(List)
+  .use(PullRefresh)
+  .use(Image)
+  .use(Grid)
+  .use(GridItem)
+  .use(Lazyload)
 
 // 配置使用中文语言
 for (let rule in rules) {
