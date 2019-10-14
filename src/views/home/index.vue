@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <!-- 导航栏 -->
-    <van-nav-bar title="首页" />
+    <van-nav-bar title="首页" fixed />
+    <!--fixed 固定定位-->
 
     <!-- 频道展示 -->
     <!--swipeable 左右滑动-->
@@ -22,11 +23,10 @@
               :key="index"
               :title="article.title"
             >
-
               <div slot="label">
                 <van-grid :border="false" :column-num="3">
                   <van-grid-item v-for="(img, index) in article.cover.images" :key="index">
-                    <van-image height="80" :src="img" lazy-load/>
+                    <van-image height="80" :src="img" lazy-load />
                   </van-grid-item>
                 </van-grid>
                 <div class="article-info">
@@ -131,6 +131,18 @@ export default {
     .meta span {
       margin-right: 10px;
     }
+  }
+    /deep/.van-tabs__wrap {
+    position: fixed;
+    z-index: 2;
+    top: 46px;
+    right: 0;
+    left: 0;
+  }
+
+  /deep/ .van-tabs__content{
+    margin-top: 90px;
+    margin-bottom: 50px;
   }
 }
 </style>
