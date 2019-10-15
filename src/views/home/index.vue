@@ -8,6 +8,10 @@
     <!--swipeable 左右滑动-->
     <!--animated 启切换标签内容时的转场动画-->
     <van-tabs v-model="active" swipeable animated>
+      <!-- 面包菜单按钮 -->
+      <div slot="nav-right" class="wap-nav" @click="changePopupState">
+        <van-icon name="wap-nav" size="34" class="icon" />
+      </div>
       <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
         <!-- 文章展示-->
         <van-list
@@ -48,26 +52,67 @@
         </van-list>
       </van-tab>
     </van-tabs>
+
+    <!-- 弹层 -->
+    <van-popup v-model="isPopupstate" round closeable position="bottom" :style="{ height: '92%' }">
+      <div class="myChannel">
+        <van-cell title="我的频道" :border="false" size="large">
+          <van-button
+            type="danger"
+            size="mini"
+            @click="isEditShow = !isEditShow"
+          >{{ isEditShow? "完成" : "编辑" }}</van-button>
+        </van-cell>
+        <van-grid :column-num="4" :gutter="10">
+          <van-grid-item v-for="(channel,index) in channels" :key="channel.id" :text="channel.name" @click="changeMyChannel(index)">
+            <van-icon v-show="isEditShow" class="close-icon" slot="icon" name="close" size="20px" />
+          </van-grid-item>
+        </van-grid>
+      </div>
+      <div class="recommendChannels">
+        <van-cell title="推荐频道" :border="false" size="large" />
+        <van-grid :column-num="4" :gutter="10">
+          <van-grid-item
+            v-for="channel in getrecommendChannels"
+            :key="channel.id"
+            :text="channel.name"
+            @click="addMyChannel(channel)"
+          />
+        </van-grid>
+      </div>
+    </van-popup>
   </div>
 </template>
 
 <script>
-import { getChannels } from '@/api/channel.js'
+import { getChannels, getAllChannels } from '@/api/channel.js'
 import { getArticles } from '@/api/articles.js'
+import { setItem, getItem } from '@/utils/storage.js'
 export default {
   name: 'HomeIndex',
   data () {
     return {
       active: 0, // 默认选中第1个tab
       channels: [], // 频道列表
-      articles: [] // 文章列表
+      articles: [], // 文章列表
+      isPopupstate: false, // 弹层状态 默认关闭
+      isEditShow: false, // 频道编辑的状态
+      allChannels: [] // 全部频道
     }
   },
   methods: {
     // 加载频道
     async onloadChannel () {
-      const { data } = await getChannels()
-      data.data.channels.forEach(item => {
+      let channels = []
+      const channelFromLostorage = getItem('channel')
+      if (channelFromLostorage) {
+        channels = channelFromLostorage
+      } else {
+        const { data } = await getChannels()
+        channels = data.data.channels
+      }
+
+      channels.forEach(item => {
         // 为每个频道添加上相应的属性
         item.finished = false
         item.loading = false // 上拉加载loading
@@ -75,7 +120,7 @@ export default {
         item.timestamp = null // 定义时间戳
         item.pullLoading = false // 下拉加载loading
       })
-      this.channels = data.data.channels
+      this.channels = channels
     },
     // 上拉加载
     async onLoad () {
@@ -114,10 +159,52 @@ export default {
       activeChannel.pullLoading = false
       // 4.提示刷新成功
       this.$toast.success('刷新成功')
+    },
+    // 获得全部频道
+    async getAllChannelList () {
+      const { data } = await getAllChannels()
+      this.allChannels = data.data.channels
+    },
+    // 控制弹层状态
+    changePopupState () {
+      this.isPopupstate = true
+    },
+    // 将推荐频道增加到我的频道中
+    addMyChannel (channel) {
+      this.channels.push(channel)
+    },
+    // 移除我的频道
+    changeMyChannel (index) {
+      // 为true ===>编辑   // 为false ===>跳转
+      if (this.isEditShow) {
+        this.channels.splice(index, 1)
+      } else {
+        this.active = index // 跳转
+        this.isPopupstate = false // 弹窗关闭
+      }
     }
   },
   created () {
     this.onloadChannel()
+    this.getAllChannelList()
+  },
+  computed: {
+    // 推荐频道 ====> 全部频道 - 我的频道
+    getrecommendChannels () {
+      const arr = []
+      this.allChannels.forEach(channel => {
+        const result = this.channels.find(item => item.id === channel.id)
+        if (!result) {
+          arr.push(channel)
+        }
+      })
+      return arr
+    }
+  },
+  watch: {
+    channels (newVal) {
+      setItem('channel', newVal)
+    }
   }
 }
 </script>
@@ -132,17 +219,35 @@ export default {
       margin-right: 10px;
     }
   }
-    /deep/.van-tabs__wrap {
+  /deep/.van-tabs__wrap {
     position: fixed;
     z-index: 2;
     top: 46px;
-    right: 0;
+    right: 22px;
     left: 0;
   }
-
-  /deep/ .van-tabs__content{
+  /deep/ .van-tabs__content {
     margin-top: 90px;
     margin-bottom: 50px;
+  }
+  //面包组件
+  .wap-nav {
+    position: fixed;
+    right: 0;
+    width: 40px;
+    background-color: #fff;
+    .icon {
+      line-height: 44px;
+      height: 44px;
+    }
+  }
+  .myChannel {
+    margin-top: 30px;
+    .close-icon {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+    }
   }
 }
 </style>
