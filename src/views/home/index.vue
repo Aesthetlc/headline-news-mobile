@@ -64,8 +64,20 @@
           >{{ isEditShow? "完成" : "编辑" }}</van-button>
         </van-cell>
         <van-grid :column-num="4" :gutter="10">
-          <van-grid-item v-for="(channel,index) in channels" :key="channel.id" :text="channel.name" @click="changeMyChannel(index)">
-            <van-icon v-show="isEditShow" class="close-icon" slot="icon" name="close" size="20px" />
+          <van-grid-item
+            v-for="(channel,index) in channels"
+            :key="channel.id"
+            :text="channel.name"
+            @click="changeMyChannel(index)"
+          >
+            <van-icon
+              v-show="isEditShow"
+              v-if="channel.id!==0"
+              class="close-icon"
+              slot="icon"
+              name="close"
+              size="20px"
+            />
           </van-grid-item>
         </van-grid>
       </div>
@@ -171,13 +183,20 @@ export default {
     },
     // 将推荐频道增加到我的频道中
     addMyChannel (channel) {
+      channel.articles = []
+      channel.finished = false
+      channel.loading = false // 上拉加载loading
+      channel.timestamp = null // 定义时间戳
+      channel.pullLoading = false // 下拉加载loading
       this.channels.push(channel)
     },
     // 移除我的频道
     changeMyChannel (index) {
       // 为true ===>编辑   // 为false ===>跳转
       if (this.isEditShow) {
-        this.channels.splice(index, 1)
+        if (index !== 0) {
+          this.channels.splice(index, 1)
+        }
       } else {
         this.active = index // 跳转
         this.isPopupstate = false // 弹窗关闭
