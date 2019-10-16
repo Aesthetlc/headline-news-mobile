@@ -26,11 +26,11 @@
     <!-- 历史记录 -->
     <van-cell-group v-else>
       <van-cell title="历史记录">
-        <template v-if="isDeleteShow">
-          <span @click="searchHistories = []">全部删除</span>&nbsp;&nbsp;
-          <span @click="isDeleteShow = false">完成</span>
+        <template v-if="isDeleteShow==false">
+          <span @click="searchHistories=[]">全部删除</span>&nbsp;&nbsp;
+          <span @click="isDeleteShow=true">完成</span>
         </template>
-        <van-icon v-else name="delete" @click="isDeleteShow = true" />
+        <van-icon @click="isDeleteShow = false" v-if="isDeleteShow" name="delete" />
       </van-cell>
       <van-cell
         :title="item"
@@ -38,11 +38,7 @@
         :key="item"
         @click="onSearch(item)"
       >
-        <van-icon
-          name="close"
-          v-show="isDeleteShow"
-          @click.stop="searchHistories.splice(index, 1)"
-        />
+      <van-icon @click.stop="searchHistories.splice(index,1)" v-if="isDeleteShow==false" name="delete" />
       </van-cell>
     </van-cell-group>
   </div>
@@ -59,7 +55,7 @@ export default {
       searchText: '',
       searchList: [], // 搜索列表
       searchHistories: getItem('search-histories') || [], // 储存历史记录  先从本地读取--->没有则为空
-      isDeleteShow: false
+      isDeleteShow: true
     }
   },
   watch: {
