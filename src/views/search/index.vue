@@ -30,7 +30,7 @@
           <span @click="searchHistories=[]">全部删除</span>&nbsp;&nbsp;
           <span @click="isDeleteShow=true">完成</span>
         </template>
-        <van-icon @click="isDeleteShow = false" v-if="isDeleteShow" name="delete" />
+        <van-icon @click="isDeleteShow = false" v-else name="delete" />
       </van-cell>
       <van-cell
         :title="item"
@@ -55,7 +55,7 @@ export default {
       searchText: '',
       searchList: [], // 搜索列表
       searchHistories: getItem('search-histories') || [], // 储存历史记录  先从本地读取--->没有则为空
-      isDeleteShow: true
+      isDeleteShow: true // 历史记录状态切换
     }
   },
   watch: {
