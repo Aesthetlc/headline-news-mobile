@@ -1,7 +1,19 @@
 <template>
   <div class="home">
     <!-- 导航栏 -->
-    <van-nav-bar title="首页" fixed />
+    <van-nav-bar fixed>
+      <van-button
+        class="search-btn"
+        slot="title"
+        round
+        type="info"
+        size="small"
+        icon="search"
+        @click="$router.push('/search')"
+      >
+        搜索
+      </van-button>
+    </van-nav-bar>
     <!--fixed 固定定位-->
 
     <!-- 频道展示 -->
@@ -104,6 +116,7 @@ export default {
   name: 'HomeIndex',
   data () {
     return {
+      searchText: '', // 搜索text
       active: 0, // 默认选中第1个tab
       channels: [], // 频道列表
       articles: [], // 文章列表
@@ -124,14 +137,7 @@ export default {
         channels = data.data.channels
       }
 
-      channels.forEach(item => {
-        // 为每个频道添加上相应的属性
-        item.finished = false
-        item.loading = false // 上拉加载loading
-        item.articles = [] // 添加文章列表
-        item.timestamp = null // 定义时间戳
-        item.pullLoading = false // 下拉加载loading
-      })
+      this.extendChannel(channels)
       this.channels = channels
     },
     // 上拉加载
@@ -175,7 +181,9 @@ export default {
     // 获得全部频道
     async getAllChannelList () {
       const { data } = await getAllChannels()
-      this.allChannels = data.data.channels
+      const channels = data.data.channels
+      this.extendChannel(channels)
+      this.allChannels = channels
     },
     // 控制弹层状态
     changePopupState () {
@@ -183,11 +191,6 @@ export default {
     },
     // 将推荐频道增加到我的频道中
     addMyChannel (channel) {
-      channel.articles = []
-      channel.finished = false
-      channel.loading = false // 上拉加载loading
-      channel.timestamp = null // 定义时间戳
-      channel.pullLoading = false // 下拉加载loading
       this.channels.push(channel)
     },
     // 移除我的频道
@@ -201,6 +204,21 @@ export default {
         this.active = index // 跳转
         this.isPopupstate = false // 弹窗关闭
       }
+    },
+    // 导出extend=>channel=>forEach
+    extendChannel (channels) {
+      channels.forEach(item => {
+        // 为每个频道添加上相应的属性
+        item.finished = false
+        item.loading = false // 上拉加载loading
+        item.articles = [] // 添加文章列表
+        item.timestamp = null // 定义时间戳
+        item.pullLoading = false // 下拉加载loading
+      })
+    },
+    // 搜索
+    onSearch () {
+      console.log('搜索了')
     }
   },
   created () {
@@ -230,6 +248,10 @@ export default {
 
 <style lang="less" scoped>
 .home {
+  .search-btn {
+    background-color: rgb(91, 171, 251);
+    width: 100%;
+  }
   .article-info {
     display: flex;
     align-items: center;

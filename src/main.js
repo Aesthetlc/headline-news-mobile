@@ -34,7 +34,8 @@ import {
   Image,
   Grid,
   GridItem,
-  Lazyload
+  Lazyload,
+  Search
 } from 'vant'
 Vue
   .use(Button)
@@ -57,6 +58,7 @@ Vue
   .use(Grid)
   .use(GridItem)
   .use(Lazyload)
+  .use(Search)
 
 // 配置使用中文语言
 for (let rule in rules) {
