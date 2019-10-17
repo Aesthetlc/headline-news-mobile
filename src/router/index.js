@@ -19,28 +19,33 @@ export default new Router({
           name: 'mine',
           path: '/mine', // 我的
           component: () => import('@/views/user')
-        },
-        {
-          name: 'userinfo',
-          path: '/userinfo', // 个人信息
-          component: () => import('@/views/user/userinfo')
         }
       ]
     },
     {
       name: 'login',
-      path: '/login',
+      path: '/login', // 登录
       component: () => import('@/views/login')
     },
     {
       name: 'search',
-      path: '/search',
+      path: '/search', // 搜索
       component: () => import('@/views/search')
     },
     {
       name: 'search-result',
-      path: '/search-result/:q',
+      path: '/search-result/:q', // 搜索结果
       component: () => import('@/views/search-result')
+    },
+    {
+      name: 'article',
+      path: '/article/:articleId', // 点击查看详情
+      component: () => import('@/views/article')
+    },
+    {
+      name: 'userinfo',
+      path: '/userinfo', // 个人信息
+      component: () => import('@/views/user/userinfo')
     }
 
   ]
