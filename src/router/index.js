@@ -12,8 +12,18 @@ export default new Router({
       children: [
         {
           name: 'home',
-          path: '',
+          path: '', // 默认路由
           component: () => import('@/views/home')
+        },
+        {
+          name: 'mine',
+          path: '/mine', // 我的
+          component: () => import('@/views/user')
+        },
+        {
+          name: 'userinfo',
+          path: '/userinfo', // 个人信息
+          component: () => import('@/views/user/userinfo')
         }
       ]
     },
