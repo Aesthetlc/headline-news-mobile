@@ -10,9 +10,7 @@
         size="small"
         icon="search"
         @click="$router.push('/search')"
-      >
-        搜索
-      </van-button>
+      >搜索</van-button>
     </van-nav-bar>
     <!--fixed 固定定位-->
 
@@ -248,47 +246,49 @@ export default {
 
 <style lang="less" scoped>
 .home {
+  .van-tabs {
+    .article-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .meta span {
+        margin-right: 20px;
+      }
+    }
+    /deep/.van-tabs__wrap {
+      position: fixed;
+      z-index: 2;
+      top: 46px;
+      right: 35px;
+      left: 0;
+    }
+    /deep/ .van-tabs__content {
+      margin-top: 90px;
+      margin-bottom: 50px;
+    }
+    //面包组件
+    .wap-nav {
+      position: fixed;
+      right: 0;
+      width: 40px;
+      background-color: #fff;
+      .icon {
+        line-height: 44px;
+        height: 44px;
+      }
+    }
+  }
   .search-btn {
     background-color: rgb(91, 171, 251);
     width: 100%;
   }
-  .article-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .meta span {
-      margin-right: 10px;
-    }
-  }
-  /deep/.van-tabs__wrap {
-    position: fixed;
-    z-index: 2;
-    top: 46px;
-    right: 22px;
-    left: 0;
-  }
-  /deep/ .van-tabs__content {
-    margin-top: 90px;
-    margin-bottom: 50px;
-  }
-  //面包组件
-  .wap-nav {
-    position: fixed;
-    right: 0;
-    width: 40px;
-    background-color: #fff;
-    .icon {
-      line-height: 44px;
-      height: 44px;
-    }
-  }
   .myChannel {
-    margin-top: 30px;
-    .close-icon {
-      position: absolute;
-      top: -10px;
-      right: -10px;
+      margin-top: 30px;
+      .close-icon {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+      }
     }
-  }
 }
 </style>

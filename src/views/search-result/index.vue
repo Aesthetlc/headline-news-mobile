@@ -40,7 +40,7 @@ export default {
       this.loading = false
 
       // 4.数据加载完成
-      if (data.data.page) {
+      if (data.data.results.length) {
         this.page++
       } else {
         this.finished = true
