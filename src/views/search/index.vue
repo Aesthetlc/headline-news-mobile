@@ -8,7 +8,7 @@
       shape="round"
       @search="onSearch(searchText)"
     >
-      <div slot="action" @click="onSearch(searchText)">搜索</div>
+      <div slot="action" @click="$router.back()">取消</div>
     </van-search>
 
     <!-- 搜索关键词 -->
