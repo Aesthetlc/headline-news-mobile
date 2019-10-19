@@ -55,8 +55,8 @@ export default {
   data () {
     return {
       user: {
-        mobile: '',
-        code: ''
+        mobile: '13811111111',
+        code: '246810'
       },
       isLoginLoading: false,
       // 公告
