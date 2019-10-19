@@ -35,7 +35,10 @@ import {
   Grid,
   GridItem,
   Lazyload,
-  Search
+  Search,
+  Dialog,
+  ActionSheet,
+  DatetimePicker
 } from 'vant'
 Vue
   .use(Button)
@@ -59,6 +62,9 @@ Vue
   .use(GridItem)
   .use(Lazyload)
   .use(Search)
+  .use(Dialog)
+  .use(ActionSheet)
+  .use(DatetimePicker)
 
 // 配置使用中文语言
 for (let rule in rules) {

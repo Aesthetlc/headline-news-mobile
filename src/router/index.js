@@ -18,7 +18,7 @@ export default new Router({
         {
           name: 'mine',
           path: '/mine', // 我的
-          component: () => import('@/views/user')
+          component: () => import('@/views/mine')
         }
       ]
     },
@@ -45,7 +45,7 @@ export default new Router({
     {
       name: 'userinfo',
       path: '/userinfo', // 个人信息
-      component: () => import('@/views/user/userinfo')
+      component: () => import('@/views/user')
     }
 
   ]
