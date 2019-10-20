@@ -42,6 +42,7 @@
     <!-- 编辑用户生日 -->
     <van-popup v-model="isUserBirthdayShow" position="bottom" :style="{ height: '30%' }">
       <van-datetime-picker
+        :value="new Date(user.birthday)"
         type="date"
         @confirm="confirmBirthday"
         :min-date="minDate"
