@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import '@/utils/date'
 import './styles/index.less'
+import 'amfe-flexible/index.js' // rem适配
 
 import {
   ValidationProvider,
@@ -12,8 +13,8 @@ import {
 } from 'vee-validate'
 import zhCN from 'vee-validate/dist/locale/zh_CN' // 加载验证插件的语言包
 import * as rules from 'vee-validate/dist/rules'
+import fastClick from 'fastclick' // 解决手机端300ms延迟
 
-// import './vant'
 import {
   Button,
   NavBar,
@@ -73,7 +74,8 @@ for (let rule in rules) {
     message: zhCN.messages[rule] // add its message
   })
 }
-
+// 解决手机端300ms延迟
+fastClick.attach(document.body)
 // 注册为全局组件
 Vue.component('ValidationProvider', ValidationProvider)
 Vue.component('ValidationObserver', ValidationObserver)

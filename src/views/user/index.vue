@@ -5,7 +5,9 @@
       left-arrow
       right-text="保存"
       @click-right="updateUser"
-      @click-left="$router.back()"
+      @click-left="$router.push({
+        name:'mine'
+      })"
     />
     <van-cell-group>
       <van-cell title="头像" is-link @click="checkImg">
@@ -117,7 +119,7 @@ export default {
         this.$toast.success('修改成功')
       } catch (error) {
         console.log(error)
-        this.$toast.fail('修改成功')
+        this.$toast.fail('修改失败')
       }
     },
 

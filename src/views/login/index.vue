@@ -91,7 +91,7 @@ export default {
         this.$store.commit('setUser', data.data)
         // 防止页面刷新token消失，将token存到本地
         setItem('user', data.data)
-        this.$router.push('/')
+        this.$router.push(this.$route.query.redirect || '/')
       } catch (err) {
         toast.clear()
         if (err.response && err.response.status === 400) {
