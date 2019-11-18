@@ -67,34 +67,14 @@ export default {
 
   watch: {
     messages () {
+      // 将聊天存放之本地Local Storage中
       setItem('chat-messages', this.messages)
       const messageList = this.$refs['message-list']
+      // $nextTick这个方法是为了改变messages之后随之回调调用
       this.$nextTick(() => {
         messageList.scrollTop = messageList.scrollHeight
       })
     }
-  },
-
-  created () {
-    // 建立连接
-    const socket = io('http://ttapi.research.itcast.cn')
-
-    this.socket = socket
-
-    // 当客户端与服务器建立连接之后===>触发connect事件
-    socket.on('connect', () => {
-      console.log('成功连接了')
-    })
-
-    // 监听服务端的消息
-    socket.on('message', data => {
-      // 将接收到的数据添加在messages数组中
-      this.messages.push({
-        message: data.msg,
-        isMe: false,
-        photo: 'http://file.qqtouxiang.com/nvsheng/2019-10-18/e921986336bf31cafdf83489e2ed7ce7.jpg'
-      })
-    })
   },
 
   mounted () {
@@ -126,6 +106,28 @@ export default {
       // 清空文本框
       this.message = ''
     }
+  },
+
+  created () {
+    // 建立连接
+    const socket = io('http://ttapi.research.itcast.cn')
+
+    this.socket = socket
+
+    // 当客户端与服务器建立连接之后===>触发connect事件
+    socket.on('connect', () => {
+      console.log('成功连接了')
+    })
+
+    // 监听服务端的消息
+    socket.on('message', data => {
+      // 将接收到的数据添加在messages数组中
+      this.messages.push({
+        message: data.msg,
+        isMe: false,
+        photo: 'http://file.qqtouxiang.com/nvsheng/2019-10-18/e921986336bf31cafdf83489e2ed7ce7.jpg'
+      })
+    })
   }
 }
 </script>

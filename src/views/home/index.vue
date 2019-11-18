@@ -284,12 +284,12 @@ export default {
     width: 100%;
   }
   .myChannel {
-      margin-top: 30px;
-      .close-icon {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-      }
+    margin-top: 30px;
+    .close-icon {
+      position: absolute;
+      top: -10px;
+      right: -10px;
     }
+  }
 }
 </style>
